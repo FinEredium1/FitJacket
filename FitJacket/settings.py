@@ -15,6 +15,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # point load_dotenv at your .env file
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
     'events',
     'ai_coach',
     'strava',
+    'workoutlogs',
 ]
 
 MIDDLEWARE = [

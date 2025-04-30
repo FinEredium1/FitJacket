@@ -5,13 +5,12 @@ import requests, os
 from dotenv import load_dotenv
 from django.http import JsonResponse
 from .models import StravaActivity
+from dashboard.models import Goal
 
 # Create your views here.
 
 load_dotenv()
 def strava_import(request):
-    if StravaActivity.objects.filter(user=request.user).exists():
-        return redirect('strava.workouts')
     return render(request, 'strava/strava_import.html')
 
 def strava_login(request):
@@ -50,11 +49,17 @@ def save_workouts(workouts, user):
             'distance': activity['distance'],
             'moving_time': activity['moving_time'],
             'date': activity['start_date'],
+            'calories': activity.get('calories', 0),
         }
-        StravaActivity.objects.update_or_create(
+        strava_activity, created = StravaActivity.objects.update_or_create(
             user=user, strava_id=strava_id, defaults=defaults
         )
-
+        if created:
+            goal = Goal.objects.filter(text__icontains=defaults['activity_type'], user=user).first()
+            if goal:
+                goal.total_duration_seconds -= defaults['moving_time']
+                goal.calories_burnt_per_second += defaults['calories']
+                goal.save()
 
 def show_workouts(request):
     workouts = StravaActivity.objects.all()  # Get all imported workouts
