@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow p-4 mb-4">
+    <h2 class="text-center mb-3">🏋️ Workout Logs</h2>
+    <p class="text-muted text-center">Select the workout you did today and jot down how you felt.</p>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="workout_type" class="form-label">Workout Type</label>
+        <select name="workout_type" id="workout_type" class="form-select" required>
+          <option value="">-- Choose a workout --</option>
+          <option value="Cardio">Cardio</option>
+          <option value="Basketball">Basketball</option>
+          <option value="Upper Body Strength">Upper Body Strength</option>
+          <option value="Yoga">Yoga</option>
+          <option value="Leg Day">Leg Day</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="notes" class="form-label">Notes (optional)</label>
+        <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="How did you feel?"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Log Workout</button>
+
+      {% if logged_workout %}
+        <div class="alert alert-success mt-3">
+          You logged: <strong>{{ logged_workout }}</strong>. Great job!
+          {% if notes %}
+            <br><em>Your note:</em> {{ notes }}
+          {% endif %}
+        </div>
+      {% endif %}
+    </form>
+  </div>
+
+  <div class="card shadow p-4">
+    <h3 class="mb-3">📜 Past Workout Logs</h3>
+    {% if all_logs %}
+      <ul class="list-group">
+        {% for log in all_logs %}
+          <li class="list-group-item">
+            <div class="fw-bold">{{ log.workout_type }}</div>
+            <small class="text-muted">{{ log.created_at|date:"M d, Y H:i" }}</small><br>
+            <em>{{ log.notes }}</em>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-muted">No workout logs yet. Start logging today!</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

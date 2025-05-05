@@ -27,8 +27,7 @@ urlpatterns = [
     path('events/', include('events.urls')),
     path('coach/', include('ai_coach.urls', namespace='ai_coach')),
     path('strava/', include('strava.urls')),
-
-    path('workout-logs/', include('workoutlogs.urls')),
+    path('workout_logs/', include('workoutlogs.urls')),
 
 
 ]
