@@ -53,4 +53,4 @@ User Control & Security
 Password reset and account controls provide users flexibility and data privacy.
 
 🔹 🎥 Demo Link
-👉 Watch Demo
+DEMO - https://www.youtube.com/watch?si=vjm4LKXRKP6eNIzH&v=fMqYhW49peM&feature=youtu.be
