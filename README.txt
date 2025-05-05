@@ -29,3 +29,5 @@ Our project meets users' needs by fostering a sense of community through feature
 Our project meets users' needs by integrating with popular fitness apps like Strava, allowing users to easily sync and track their workout data in one place, streamlining their fitness journey and progress tracking.
 
 Our project meets users' needs by providing flexibility, allowing them to easily reset their password and manage their account, ensuring that their fitness data and goals remain private and secure.
+
+DEMO - https://www.youtube.com/watch?si=vjm4LKXRKP6eNIzH&v=fMqYhW49peM&feature=youtu.be
