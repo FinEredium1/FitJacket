@@ -1,22 +1,21 @@
 {% extends 'base.html' %}
-{% block content %}
 {% load static %}
-<div class="d-flex justify-content-between mb-4">
-  <a href="{% url 'GoalHistory' %}" class="btn btn-success btn-lg px-4 shadow">
-    🗂️ View Goal History
-  </a>
-  <a href="{% url 'FavoriteHistory' %}" class="btn btn-primary btn-lg px-4 shadow">
-    ⭐ View Favorite Goals
-  </a>
-  <a href="{% url 'progress' %}" class="btn btn-warning btn-lg px-4 shadow">
-    📈 View My Progress
-  </a>
-</div>
-<footer class="py-3 w-100">
+
+{% block content %}
 <div class="container py-4">
+
+  <!-- Top Navigation Buttons -->
+  <div class="d-flex justify-content-between mb-4">
+    <a href="{% url 'GoalHistory' %}" class="btn btn-success btn-lg px-4 shadow">🗂️ View Goal History</a>
+    <a href="{% url 'FavoriteHistory' %}" class="btn btn-primary btn-lg px-4 shadow">⭐ View Favorite Goals</a>
+    <a href="{% url 'progress' %}" class="btn btn-warning btn-lg px-4 shadow">📈 View My Progress</a>
+  </div>
+
   <h2 class="mb-4 text-center">FitJacket Dashboard</h2>
 
+  <!-- Goal Form and Current Goals -->
   <div class="row g-4">
+    <!-- Goal Form -->
     <div class="col-md-6">
       <div class="card shadow h-100">
         <div class="card-body">
@@ -28,31 +27,28 @@
               <label for="inputText" class="form-label">Enter a new fitness goal:</label>
               <input type="text" class="form-control" id="inputText" name="user_input_field" required>
             </div>
-              <div class="mb-3">
-                <label for="startDate" class="form-label">Start Date:</label>
-                <input type="date" class="form-control" id="startDate" name="start_date" required>
-              </div>
-
-              <div class="mb-3">
-                <label for="endDate" class="form-label">End Date:</label>
-                <input type="date" class="form-control" id="endDate" name="end_date" required>
-              </div>
+            <div class="mb-3">
+              <label for="startDate" class="form-label">Start Date:</label>
+              <input type="date" class="form-control" id="startDate" name="start_date" required>
+            </div>
+            <div class="mb-3">
+              <label for="endDate" class="form-label">End Date:</label>
+              <input type="date" class="form-control" id="endDate" name="end_date" required>
+            </div>
             <button type="submit" name="submit_goal" class="btn btn-primary">Submit Goal</button>
           </form>
-          
-          <div class="mb-3">
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} mt-3">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          </div>
+
+          <!-- Message display -->
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} mt-3">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
         </div>
       </div>
     </div>
 
+    <!-- Current Goals -->
     <div class="col-md-6">
       <div class="card shadow h-100">
         <div class="card-body">
@@ -60,30 +56,30 @@
           {% if user_inputs %}
             <ol class="list-group list-group-numbered">
               {% for goal in user_inputs %}
-              <li class="list-group-item">
-                {{ goal.text }}
-                <div class="mt-2 text-muted">
-                  <small>
-                    <strong>Start Date:</strong> {{ goal.start_date|date:"m/d/Y" }} <br>
-                    <strong>End Date:</strong> {{ goal.end_date|date:"m/d/Y" }}
-                  </small>
-                </div>
-                <div class="mt-2 d-flex gap-2">
-                  <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="goal_id" value="{{ goal.id }}">
-                    <button type="submit" name="abandon_goal" class="btn btn-danger btn-sm">Abandon Goal</button>
-                  </form>
-                  <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="goal_id" value="{{ goal.id }}">
-                    <button type="submit" name="favorite_goal" class="btn btn-primary btn-sm">Favorite Goal</button>
-                  </form>
-                    <form method="GET" action="{% url 'start_goal' goal.id %}">
-                    <button type="submit" class="btn btn-success btn-sm">Start Goal</button>
+                <li class="list-group-item">
+                  {{ goal.text }}
+                  <div class="mt-2 text-muted">
+                    <small>
+                      <strong>Start Date:</strong> {{ goal.start_date|date:"m/d/Y" }} <br>
+                      <strong>End Date:</strong> {{ goal.end_date|date:"m/d/Y" }}
+                    </small>
+                  </div>
+                  <div class="mt-2 d-flex gap-2">
+                    <form method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" name="goal_id" value="{{ goal.id }}">
+                      <button type="submit" name="abandon_goal" class="btn btn-danger btn-sm">Abandon Goal</button>
                     </form>
-                </div>
-              </li>
+                    <form method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" name="goal_id" value="{{ goal.id }}">
+                      <button type="submit" name="favorite_goal" class="btn btn-primary btn-sm">Favorite Goal</button>
+                    </form>
+                    <form method="GET" action="{% url 'start_goal' goal.id %}">
+                      <button type="submit" class="btn btn-success btn-sm">Start Goal</button>
+                    </form>
+                  </div>
+                </li>
               {% endfor %}
             </ol>
           {% else %}
@@ -92,68 +88,72 @@
         </div>
       </div>
     </div>
-
-<!-- Dashboard Summary Stats -->
-<div class="row mt-4">
-  <div class="col-md-6 offset-md-3">
-    <div class="card text-white shadow-lg h-100 p-4" style="background: linear-gradient(to right, #ff7e5f, #feb47b);">
-      <h6 class="mb-3 text-black">🔥 Current Streak</h6>
-      <p class="fw-bold display-4" style="font-size: 3rem; text-shadow: 2px 2px 10px rgba(255, 69, 0, 0.6);" id="streak-number">{{ streak }}</p>
-    </div>
   </div>
-</div>
 
-
-<div class="col-md-4">
-  <div class="card bg-success text-white shadow h-100 p-3">
-    <h6 class="mb-2">🥇 Goals Accomplished</h6>
-    <p class="fw-bold display-6">{{ completed_goals_count }}</p>
-  </div>
-</div>
-
-<div class="col-md-4">
-  <div class="card bg-info text-white shadow h-100 p-3">
-    <h6 class="mb-2">🔜 Goals Remaining</h6>
-    <p class="fw-bold display-6">{{ remaining_goals_count }}</p>
-  </div>
-</div>
-
-<div class="col-md-4">
-  <div class="card bg-warning text-dark shadow h-100 p-3">
-    <h6 class="mb-2">🚫 Goals Abandoned</h6>
-    <p class="fw-bold display-6">{{ abandoned_goals_count }}</p>
-  </div>
-</div>
-
-
-<div class="col-md-12 mt-5">
-  <div class="card bg-primary text-white shadow-lg h-100 p-4">
-    <div class="row">
-      <div class="col-md-9">
-        <h4 class="mb-3">🤖 Fitness Guidance</h4>
-        <p class="mb-3">Get personalized workout advice, training tips, and nutrition guidance from your AI Coach.</p>
-        <a href="{% url 'ai_coach:home' %}" class="btn btn-light">Ask Your Coach</a>
+  <!-- Streak Card -->
+  <div class="row mt-4">
+    <div class="col-md-6 offset-md-3">
+      <div class="card text-white shadow-lg h-100 p-4" style="background: linear-gradient(to right, #ff7e5f, #feb47b);">
+        <h6 class="mb-3 text-black">🔥 Current Streak</h6>
+        <p class="fw-bold display-4" style="font-size: 3rem; text-shadow: 2px 2px 10px rgba(255, 69, 0, 0.6);" id="streak-number">{{ streak }}</p>
       </div>
     </div>
   </div>
-  <div class="card bg-gradient-primary shadow-lg h-100 p-4">
-      <div class="row">
-        <div class="col-md-2 d-flex align-items-center justify-content-center">
-          <i class="fas fa-dumbbell fa-4x"></i>
-        </div>
-        <div class="col-md-7">
-          <h4 class="mb-3">🏋️‍♂️ Personalized Workout Plans</h4>
-          <p class="mb-3">Have our AI generate a customized workout plan based on your fitness goals and preferences.</p>
-        </div>
-        <div class="col-md-3 d-flex align-items-center justify-content-center">
-          <a href="{% url 'generate_workout_plan' %}" class="btn btn-light btn-lg">Create Plan</a>
-          <a href="{% url 'workout_plans' %}" class="btn btn-light ms-2">My Plans</a>
+
+  <!-- Goal Statistics -->
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <div class="card bg-success text-white shadow h-100 p-3">
+        <h6 class="mb-2">🥇 Goals Accomplished</h6>
+        <p class="fw-bold display-6">{{ completed_goals_count }}</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-info text-white shadow h-100 p-3">
+        <h6 class="mb-2">🔜 Goals Remaining</h6>
+        <p class="fw-bold display-6">{{ remaining_goals_count }}</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-warning text-dark shadow h-100 p-3">
+        <h6 class="mb-2">🚫 Goals Abandoned</h6>
+        <p class="fw-bold display-6">{{ abandoned_goals_count }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Coach and Workout Plan Cards -->
+  <div class="row mt-5 g-4">
+    <div class="col-md-12">
+      <div class="card bg-primary text-white shadow-lg h-100 p-4">
+        <div class="row">
+          <div class="col-md-9">
+            <h4 class="mb-3">🤖 Fitness Guidance</h4>
+            <p class="mb-3">Get personalized workout advice, training tips, and nutrition guidance from your AI Coach.</p>
+            <a href="{% url 'ai_coach:home' %}" class="btn btn-light">Ask Your Coach</a>
+          </div>
         </div>
       </div>
     </div>
-</div>
-</div>
 
-</footer>
+    <div class="col-md-12">
+      <div class="card bg-gradient-primary shadow-lg h-100 p-4">
+        <div class="row">
+          <div class="col-md-2 d-flex align-items-center justify-content-center">
+            <i class="fas fa-dumbbell fa-4x"></i>
+          </div>
+          <div class="col-md-7">
+            <h4 class="mb-3">🏋️‍♂️ Personalized Workout Plans</h4>
+            <p class="mb-3">Have our AI generate a customized workout plan based on your fitness goals and preferences.</p>
+          </div>
+          <div class="col-md-3 d-flex align-items-center justify-content-center flex-wrap gap-2">
+            <a href="{% url 'generate_workout_plan' %}" class="btn btn-light btn-lg">Create Plan</a>
+            <a href="{% url 'workout_plans' %}" class="btn btn-light">My Plans</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+</div>
 {% endblock content %}
